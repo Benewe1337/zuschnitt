@@ -3,59 +3,70 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Folien-Handouts (2 Folien pro Seite) in einzelne Folienseiten zerlegen – komplett im Browser, nichts wird hochgeladen." />
+    <meta name="description" content="Macht aus Vorlesungs-Handouts mit zwei Folien pro Seite wieder einzelne Folien. Läuft als WebAssembly im Browser." />
     <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <title>Zuschnitt – Handouts in Folien zerlegen</title>
+    <title>Zuschnitt – Handouts in einzelne Folien zerlegen</title>
   </head>
   <body>
-    <main class="sheet">
-      <header class="head">
-        <p class="kicker"><span class="mark" aria-hidden="true"></span>PDF · 16:9 · lokal</p>
+    <main class="page">
+      <header class="intro">
         <h1>Zuschnitt</h1>
         <p class="lede">
-          Zieht Vorlesungs-Handouts auseinander: Jeder 16:9-Folienrahmen wird zu einer eigenen
-          Seite, leere Rahmen fliegen raus.
+          Macht aus Vorlesungs-Handouts mit zwei Folien pro Seite wieder einzelne Folien.
+          <em>Leere Folienrahmen fallen dabei weg.</em>
         </p>
       </header>
 
-      <label id="drop" class="drop" for="file">
-        <span class="crop tl" aria-hidden="true"></span>
-        <span class="crop tr" aria-hidden="true"></span>
-        <span class="crop bl" aria-hidden="true"></span>
-        <span class="crop br" aria-hidden="true"></span>
-        <span class="drop-title">PDFs hier ablegen</span>
-        <span class="drop-hint">oder klicken, um Dateien auszuwählen</span>
-        <input id="file" type="file" accept="application/pdf,.pdf" multiple />
-      </label>
+      <figure class="sketch" aria-hidden="true">
+        <svg viewBox="0 0 220 250" fill="none">
+          <g class="sheet">
+            <rect x="20" y="10" width="120" height="170" rx="2" />
+            <line x1="32" y1="98" x2="94" y2="98" />
+            <line x1="32" y1="168" x2="80" y2="168" />
+          </g>
+          <g class="slide slide-a">
+            <rect x="30" y="22" width="100" height="56.25" rx="1.5" />
+            <line x1="40" y1="36" x2="88" y2="36" />
+            <line x1="40" y1="46" x2="110" y2="46" />
+            <line x1="40" y1="54" x2="102" y2="54" />
+          </g>
+          <g class="slide slide-b">
+            <rect x="30" y="108" width="100" height="56.25" rx="1.5" />
+            <line x1="40" y1="122" x2="76" y2="122" />
+            <circle cx="98" cy="142" r="11" />
+          </g>
+        </svg>
+      </figure>
 
-      <p class="engine-line">
-        <span id="engine" data-state="loading">Engine lädt …</span>
-        <span class="sep" aria-hidden="true">/</span>
-        Deine Dateien verlassen den Browser nicht.
-      </p>
+      <section class="work" aria-label="Dateien zuschneiden">
+        <label id="drop" class="drop" for="file">
+          <span class="drop-title">PDF hier ablegen</span>
+          <span class="drop-hint">oder <u>Datei auswählen</u>, mehrere gehen auch</span>
+          <input id="file" type="file" accept="application/pdf,.pdf" multiple />
+        </label>
 
-      <ol id="jobs" class="jobs" aria-live="polite"></ol>
+        <p class="engine">
+          <span id="engine" data-state="loading">WebAssembly wird geladen</span>
+        </p>
+
+        <ol id="jobs" class="jobs" aria-live="polite"></ol>
+      </section>
 
       <footer class="foot">
         <p>
-          Läuft mit <a href="https://mupdf.com/" rel="noopener">MuPDF</a> als WebAssembly.
-          <a href="https://github.com/Benewe1337/zuschnitt" rel="noopener">Quellcode</a> unter AGPL-3.0.
-          Keine Cookies, kein Tracking, kein Upload.
+          Läuft als WebAssembly direkt im Browser, auf Basis von
+          <a href="https://mupdf.com/" rel="noopener">MuPDF</a>.
+          <a href="https://github.com/Benewe1337/zuschnitt" rel="noopener">Quellcode</a> unter <span class="nowrap">AGPL-3.0</span>.
         </p>
       </footer>
     </main>
 
     <template id="job-template">
       <li class="job" data-state="queued">
-        <div class="job-main">
-          <span class="job-name"></span>
-          <span class="job-size"></span>
-        </div>
-        <div class="job-side">
-          <span class="job-status">wartet</span>
-          <a class="job-download" hidden>Herunterladen</a>
-        </div>
+        <span class="job-name"></span>
+        <span class="job-status">wartet</span>
+        <a class="job-download" hidden>Herunterladen</a>
         <ul class="job-notes"></ul>
       </li>
     </template>

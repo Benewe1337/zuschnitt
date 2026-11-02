@@ -18,7 +18,7 @@ const engineReady = new Promise((resolve) => (markReady = resolve));
 
 worker.onmessage = ({ data }) => {
   if (data.type === "ready") {
-    engine.textContent = "Engine bereit";
+    engine.textContent = "WebAssembly bereit";
     engine.dataset.state = "ready";
     markReady();
     return;
@@ -31,7 +31,7 @@ worker.onmessage = ({ data }) => {
 };
 
 worker.onerror = (event) => {
-  engine.textContent = "Engine konnte nicht geladen werden";
+  engine.textContent = "WebAssembly konnte nicht geladen werden";
   engine.dataset.state = "error";
   for (const job of jobs.values()) {
     if (job.el.dataset.state === "working") fail(job, event.message || "WebAssembly nicht verfügbar");
@@ -41,7 +41,6 @@ worker.onerror = (event) => {
 function createJob(file) {
   const el = template.content.firstElementChild.cloneNode(true);
   el.querySelector(".job-name").textContent = file.name;
-  el.querySelector(".job-size").textContent = formatSize(file.size);
   list.prepend(el);
   const job = { id: nextId++, file, el };
   jobs.set(job.id, job);
@@ -66,7 +65,7 @@ function finish(job, { bytes, pagesIn, pagesOut }) {
   link.href = url;
   link.download = outputName(job.file.name);
   link.hidden = false;
-  setStatus(job, "done", `${pagesIn} → ${pagesOut} Seiten · ${formatSize(bytes.byteLength)}`);
+  setStatus(job, "done", `${pagesIn} Seiten → ${pagesOut} Folien, ${formatSize(bytes.byteLength)}`);
 }
 
 function fail(job, message) {
@@ -77,7 +76,7 @@ async function process(file) {
   const job = createJob(file);
   if (!isPdf(file)) return fail(job, "Keine PDF-Datei");
   if (file.size > MAX_BYTES) return fail(job, `Zu groß (max. ${formatSize(MAX_BYTES)})`);
-  setStatus(job, "working", "wird zugeschnitten …");
+  setStatus(job, "working", `${formatSize(file.size)}, wird zugeschnitten …`);
   try {
     const buffer = await file.arrayBuffer();
     await engineReady;

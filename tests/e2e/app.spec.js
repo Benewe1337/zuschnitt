@@ -20,7 +20,7 @@ test("Handout hochladen, zuschneiden und herunterladen", async ({ page }) => {
   });
   const job = page.locator(".job").first();
   await expect(job).toHaveAttribute("data-state", "done");
-  await expect(job.locator(".job-status")).toContainText("2 → 3 Seiten");
+  await expect(job.locator(".job-status")).toContainText("2 Seiten → 3 Folien");
   await expect(job.locator(".job-notes")).toContainText("S. 2: leerer Rahmen übersprungen");
 
   const [download] = await Promise.all([page.waitForEvent("download"), job.locator(".job-download").click()]);
