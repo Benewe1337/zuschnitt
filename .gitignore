@@ -8,3 +8,5 @@ Project.md
 _input/
 *.local
 .DS_Store
+.vercel
+.env*
