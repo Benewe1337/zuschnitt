@@ -1,0 +1,324 @@
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+
+/* Richtung: Schneidematte. Grünes Raster als Unterlage, darauf ein Blatt mit Schnittmarken. */
+:root {
+  --mat: oklch(42% 0.07 160);
+  --mat-line: oklch(52% 0.07 160 / 0.55);
+  --mat-line-strong: oklch(62% 0.08 160 / 0.7);
+  --paper: oklch(98.5% 0.008 95);
+  --ink: oklch(22% 0.02 160);
+  --ink-soft: oklch(45% 0.02 160);
+  --rule: oklch(86% 0.015 95);
+  --blade: oklch(70% 0.17 55);
+  --blade-ink: oklch(42% 0.14 45);
+  --ok: oklch(48% 0.12 155);
+  --warn: oklch(55% 0.13 70);
+  --err: oklch(52% 0.18 25);
+
+  --font-display: "Bricolage Grotesque Variable", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  --text-hero: clamp(3.4rem, 1.6rem + 8vw, 7.5rem);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --mat: oklch(26% 0.045 160);
+    --mat-line: oklch(36% 0.05 160 / 0.6);
+    --mat-line-strong: oklch(44% 0.06 160 / 0.7);
+    --paper: oklch(20% 0.012 160);
+    --ink: oklch(94% 0.01 95);
+    --ink-soft: oklch(74% 0.015 120);
+    --rule: oklch(32% 0.015 160);
+    --blade: oklch(76% 0.16 60);
+    --blade-ink: oklch(80% 0.13 60);
+    --ok: oklch(78% 0.13 155);
+    --warn: oklch(82% 0.12 80);
+    --err: oklch(74% 0.15 25);
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: var(--font-display);
+  color: var(--ink);
+  background-color: var(--mat);
+  background-image:
+    linear-gradient(var(--mat-line-strong) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mat-line-strong) 1px, transparent 1px),
+    linear-gradient(var(--mat-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--mat-line) 1px, transparent 1px);
+  background-size:
+    100px 100px,
+    100px 100px,
+    20px 20px,
+    20px 20px;
+  background-position: -1px -1px;
+  padding: clamp(1rem, 4vw, 4rem) clamp(1rem, 4vw, 2rem);
+}
+
+.sheet {
+  position: relative;
+  max-width: 46rem;
+  margin: 0 auto;
+  background: var(--paper);
+  padding: clamp(1.5rem, 5vw, 3.5rem);
+  box-shadow:
+    0 1px 0 oklch(0% 0 0 / 0.08),
+    0 24px 60px -24px oklch(0% 0 0 / 0.45);
+  transform: rotate(-0.6deg);
+}
+
+.sheet > * {
+  transform: rotate(0.6deg);
+}
+
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.mark {
+  width: 0.9rem;
+  height: 0.9rem;
+  border-left: 2px solid var(--blade);
+  border-top: 2px solid var(--blade);
+}
+
+h1 {
+  margin: 0.2rem 0 0;
+  font-size: var(--text-hero);
+  font-weight: 760;
+  line-height: 0.88;
+  letter-spacing: -0.045em;
+  font-variation-settings: "wdth" 80;
+}
+
+.lede {
+  max-width: 34ch;
+  margin: 1.2rem 0 2.4rem;
+  font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.25rem);
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+/* Ablagefläche mit Schnittmarken an den Ecken */
+.drop {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 0.35rem;
+  aspect-ratio: 16 / 9;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  border: 1px dashed var(--rule);
+  transition: background-color 200ms var(--ease);
+}
+
+.drop-title {
+  align-self: end;
+  font-size: clamp(1.4rem, 1rem + 1.8vw, 2.2rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.drop-hint {
+  align-self: start;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.drop input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.crop {
+  position: absolute;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-color: var(--ink);
+  border-style: solid;
+  border-width: 0;
+  transition: transform 260ms var(--ease), border-color 200ms;
+}
+.tl { top: -0.7rem; left: -0.7rem; border-top-width: 2px; border-left-width: 2px; }
+.tr { top: -0.7rem; right: -0.7rem; border-top-width: 2px; border-right-width: 2px; }
+.bl { bottom: -0.7rem; left: -0.7rem; border-bottom-width: 2px; border-left-width: 2px; }
+.br { bottom: -0.7rem; right: -0.7rem; border-bottom-width: 2px; border-right-width: 2px; }
+
+.drop:hover .crop,
+.drop.over .crop,
+.drop:focus-within .crop {
+  border-color: var(--blade);
+}
+.drop:hover .tl, .drop.over .tl, .drop:focus-within .tl { transform: translate(0.45rem, 0.45rem); }
+.drop:hover .tr, .drop.over .tr, .drop:focus-within .tr { transform: translate(-0.45rem, 0.45rem); }
+.drop:hover .bl, .drop.over .bl, .drop:focus-within .bl { transform: translate(0.45rem, -0.45rem); }
+.drop:hover .br, .drop.over .br, .drop:focus-within .br { transform: translate(-0.45rem, -0.45rem); }
+
+.drop.over {
+  background-color: color-mix(in oklch, var(--blade) 10%, transparent);
+}
+
+.drop:focus-within {
+  outline: 2px solid var(--blade);
+  outline-offset: 6px;
+}
+
+.engine-line {
+  margin: 1.2rem 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.sep {
+  margin: 0 0.4rem;
+  opacity: 0.5;
+}
+
+#engine::before {
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.45rem;
+  border-radius: 50%;
+  background: var(--warn);
+  vertical-align: 0.05em;
+}
+#engine[data-state="ready"]::before { background: var(--ok); }
+#engine[data-state="error"]::before { background: var(--err); }
+
+/* Auftragsliste: Zeilen wie ein Schnittprotokoll */
+.jobs {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+}
+
+.job {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.3rem 1rem;
+  padding: 0.9rem 0;
+  border-top: 1px solid var(--rule);
+  animation: slide-in 380ms var(--ease);
+}
+.job:last-child { border-bottom: 1px solid var(--rule); }
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+}
+
+.job-main { min-width: 0; }
+
+.job-name {
+  display: block;
+  overflow: hidden;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.job-size,
+.job-status {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+.job-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.3rem;
+  text-align: right;
+}
+
+.job[data-state="working"] .job-status { color: var(--warn); }
+.job[data-state="done"] .job-status { color: var(--ok); }
+.job[data-state="error"] .job-status { color: var(--err); }
+
+.job-download {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--blade);
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 120ms var(--ease), box-shadow 120ms var(--ease);
+}
+.job-download:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.job-download:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
+.job-download:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+@media (prefers-color-scheme: dark) {
+  .job-download { color: oklch(18% 0.02 160); }
+}
+
+.job-notes {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+.job-notes:empty { display: none; }
+.job-notes [data-level="warn"] { color: var(--warn); }
+
+.foot {
+  margin-top: 3rem;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  color: var(--ink-soft);
+}
+
+.foot a {
+  color: inherit;
+  text-decoration-color: var(--blade);
+  text-underline-offset: 0.2em;
+}
+.foot a:hover { color: var(--blade-ink); }
+
+@media (max-width: 540px) {
+  .sheet, .sheet > * { transform: none; }
+  .drop { aspect-ratio: 4 / 3; }
+  .job { grid-template-columns: 1fr; }
+  .job-side { align-items: flex-start; text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

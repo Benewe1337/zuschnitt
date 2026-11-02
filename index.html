@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Folien-Handouts (2 Folien pro Seite) in einzelne Folienseiten zerlegen – komplett im Browser, nichts wird hochgeladen." />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>Zuschnitt – Handouts in Folien zerlegen</title>
+  </head>
+  <body>
+    <main class="sheet">
+      <header class="head">
+        <p class="kicker"><span class="mark" aria-hidden="true"></span>PDF · 16:9 · lokal</p>
+        <h1>Zuschnitt</h1>
+        <p class="lede">
+          Zieht Vorlesungs-Handouts auseinander: Jeder 16:9-Folienrahmen wird zu einer eigenen
+          Seite, leere Rahmen fliegen raus.
+        </p>
+      </header>
+
+      <label id="drop" class="drop" for="file">
+        <span class="crop tl" aria-hidden="true"></span>
+        <span class="crop tr" aria-hidden="true"></span>
+        <span class="crop bl" aria-hidden="true"></span>
+        <span class="crop br" aria-hidden="true"></span>
+        <span class="drop-title">PDFs hier ablegen</span>
+        <span class="drop-hint">oder klicken, um Dateien auszuwählen</span>
+        <input id="file" type="file" accept="application/pdf,.pdf" multiple />
+      </label>
+
+      <p class="engine-line">
+        <span id="engine" data-state="loading">Engine lädt …</span>
+        <span class="sep" aria-hidden="true">/</span>
+        Deine Dateien verlassen den Browser nicht.
+      </p>
+
+      <ol id="jobs" class="jobs" aria-live="polite"></ol>
+
+      <footer class="foot">
+        <p>
+          Läuft mit <a href="https://mupdf.com/" rel="noopener">MuPDF</a> als WebAssembly
+          (<a href="https://github.com/ArtifexSoftware/mupdf.js" rel="noopener">Quellcode, AGPL-3.0</a>).
+          Keine Cookies, kein Tracking, kein Upload.
+        </p>
+      </footer>
+    </main>
+
+    <template id="job-template">
+      <li class="job" data-state="queued">
+        <div class="job-main">
+          <span class="job-name"></span>
+          <span class="job-size"></span>
+        </div>
+        <div class="job-side">
+          <span class="job-status">wartet</span>
+          <a class="job-download" hidden>Herunterladen</a>
+        </div>
+        <ul class="job-notes"></ul>
+      </li>
+    </template>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

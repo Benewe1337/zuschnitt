@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.vercel/
+test-results/
+playwright-report/
+.ecc/
+Project.md
+_input/
+*.local
+.DS_Store
