@@ -1,5 +1,5 @@
 {
-  "name": "pdf-crop",
+  "name": "zuschnitt",
   "version": "1.0.0",
   "description": "Folien-Handouts im Browser zuschneiden (MuPDF WebAssembly)",
   "scripts": {

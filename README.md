@@ -38,7 +38,14 @@ npm run build      # -> dist/
 
 ## Deployment
 
-Vercel-Projekt ist mit diesem Repo verbunden; jeder Push auf `main` deployt.
+Live: https://zuschnitt-pdf.vercel.app (Vercel-Projekt `zuschnitt`).
+
+```bash
+vercel deploy --prod   # Token z. B. über VERCEL_TOKEN
+```
+
+Auto-Deploy bei Push ist noch nicht aktiv: Dafür muss im Vercel-Account eine GitHub-Login-Connection
+hinterlegt und das Repo im Dashboard verbunden werden.
 
 ## Lizenz
 
